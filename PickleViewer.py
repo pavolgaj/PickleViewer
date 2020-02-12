@@ -53,16 +53,18 @@ else:
     bundle_dir = os.path.dirname(os.path.abspath(__file__))
 print('PickleViewer v0.7.6 is', frozen, 'frozen')
 
-# Hide Console
-kernel32 = ctypes.WinDLL('kernel32')
-user32 = ctypes.WinDLL('user32')
 
 SW_HIDE = 0
 SW_SHOW = 0
 
-hWnd = kernel32.GetConsoleWindow()
-if hWnd:
-    user32.ShowWindow(hWnd, SW_HIDE) if not wait_mode else False
+# Hide Console
+if sys.platform=='win32':
+    kernel32 = ctypes.WinDLL('kernel32')
+    user32 = ctypes.WinDLL('user32')
+
+    hWnd = kernel32.GetConsoleWindow()
+    if hWnd:
+        user32.ShowWindow(hWnd, SW_HIDE) if not wait_mode else False
 
 # Loading settings
 print("Loading settings")
@@ -550,12 +552,13 @@ def menQuit(event=None):
 # Defining main window
 root = tk.Tk()
 root.title(software_title + " - " + open_filetitle + " [Edit]")
-try:
-    root.iconbitmap(os.path.join(os.path.dirname(sys.argv[0]), "icon.ico"))
-except BaseException as e:
-    print("Can not load PicklePreview Icon! " + str(e))
-    messagebox.showwarning("Load Error", "Can not load PicklePreview Icon! " + str(e))
-    input("Press enter to continue...") if wait_mode else False
+if sys.platform=='win32':
+    try:
+        root.iconbitmap(os.path.join(os.path.dirname(sys.argv[0]), "icon.ico"))
+    except BaseException as e:
+        print("Can not load PicklePreview Icon! " + str(e))
+        messagebox.showwarning("Load Error", "Can not load PicklePreview Icon! " + str(e))
+        input("Press enter to continue...") if wait_mode else False
 root.protocol("WM_DELETE_WINDOW", menQuit)
 print("Set window geometry to:", local_config["WINDOW"]["geometry"])
 root.geometry(local_config["WINDOW"]["geometry"])
