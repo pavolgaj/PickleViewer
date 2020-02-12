@@ -717,5 +717,6 @@ update_thread.start()
 # Main Loop
 tk.mainloop()
 
-if hWnd:
-    user32.ShowWindow(hWnd, SW_SHOW) if not wait_mode else False
+if sys.platform=='win32':
+    if hWnd:
+        user32.ShowWindow(hWnd, SW_SHOW) if not wait_mode else False
