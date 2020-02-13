@@ -552,13 +552,17 @@ def menQuit(event=None):
 # Defining main window
 root = tk.Tk()
 root.title(software_title + " - " + open_filetitle + " [Edit]")
-if sys.platform=='win32':
-    try:
-        root.iconbitmap(os.path.join(os.path.dirname(sys.argv[0]), "icon.ico"))
-    except BaseException as e:
-        print("Can not load PicklePreview Icon! " + str(e))
-        messagebox.showwarning("Load Error", "Can not load PicklePreview Icon! " + str(e))
-        input("Press enter to continue...") if wait_mode else False
+try:
+    root.iconbitmap(os.path.join(os.path.dirname(sys.argv[0]), "icon.ico"))   #WINDOWS
+except tk.TclError:
+    try: #linux
+        img=tk.Image('photo',file='icon.png')
+        root.tk.call('wm','iconphoto',root._w,img)
+    except: pass
+except BaseException as e:
+    print("Can not load PicklePreview Icon! " + str(e))
+    messagebox.showwarning("Load Error", "Can not load PicklePreview Icon! " + str(e))
+    input("Press enter to continue...") if wait_mode else False
 root.protocol("WM_DELETE_WINDOW", menQuit)
 print("Set window geometry to:", local_config["WINDOW"]["geometry"])
 root.geometry(local_config["WINDOW"]["geometry"])
